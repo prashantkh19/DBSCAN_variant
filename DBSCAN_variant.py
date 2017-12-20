@@ -113,7 +113,41 @@ def getBorderPointIndices(noise_pts, core_pts):
     return border_points
 
 
+# function to add value after ref in list
+def add_pt(list, ref, value):
+    new_list=[]
+    for i in list:
+        new_list.append(i)
+        if i == ref:
+            new_list.append(value)
 
+    return new_list
+
+
+# function to update cluster with border points
+def update_clusters(clusters, sparsified_matrix, border_pts):
+    clusters_dummy = clusters
+    for m in border_pts:
+        max_val = 0
+        max_i = 0
+        max_k = 0
+        for i in range(len(clusters)):
+            for k in clusters[i]:
+                w = len(list(set(sparsified_matrix[k - 1]).intersection(sparsified_matrix[m - 1])))
+                if(max_val<w):
+                    max_val = w
+                    max_i = i
+                    max_k = k
+                # print(w)
+        # print("max val ")
+        # print(max_val)
+        # print("max i ")
+        # print(max_i)
+        # print("max k ")
+        # print(max_k)
+        clusters_dummy[max_i] = add_pt(clusters_dummy[max_i],max_k,m)
+        clusters_dummy[max_i].sort()
+    return clusters_dummy
 
 ##########################################################################################################
 
@@ -192,20 +226,6 @@ border_pts = getBorderPointIndices(noise_pts,core_pts)
 print("Border Points are: ")
 print(border_pts)
 
-##############################################################################################33
-
-#left
-# def join_border_pts_with_clusters(clusters, border_pts):
-#     # getting
-#
-# for i in range(len(clusters)):
-#     for m in clusters[i]:
-#         max_val = 0
-#         max_index = 0
-#         for k in border_pts:
-#             w = len(list(set(sparsified_matrix[k - 1]).intersection(sparsified_matrix[m - 1])))
-#             if(max_val<w):
-#                 max_val=w
-#                 max_index=k
-#             print(w)
-# print(clusters)
+updated_cluster = update_clusters(clusters,sparsified_matrix,border_pts)
+print("Updated Clusters are: ")
+print(updated_cluster)
