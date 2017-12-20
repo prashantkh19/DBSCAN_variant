@@ -1,6 +1,5 @@
 import numpy as np
 import math
-from sklearn.metrics.pairwise import euclidean_distances
 
 # function to read input data file
 def read(filename):
@@ -16,7 +15,7 @@ def read(filename):
 # function to calculate euclidean distance between two points X and Y of dimension n
 def euclidean_distance(X, Y, n):
     distance = 0
-    for i in range(n - 1):
+    for i in range(n):
         distance += math.pow((float(X[i]) - float(Y[i])), 2)
     distance = math.sqrt(distance)
     return distance
@@ -47,6 +46,8 @@ def get_Sparsified_Matrix(matrix,k):
         neighbors = []
         for x in range(1, k + 1):
             val = dummy.index(distances[x]) + 1
+
+            # checking for duplicates in dummy list
             val = check(val, neighbors, dummy, distances[x], 0)
             neighbors.append(val)
         neighbors.sort()
@@ -168,7 +169,7 @@ def update_clusters(clusters, sparsified_matrix, border_pts):
 ##########################################################################################################
 
 #Input data
-d = read('Test_Cases/t2.in')
+d = read('Test_Cases/t1.in')
 values = d[0]
 del d[0]
 
@@ -181,7 +182,6 @@ MinPts=int(values[4])
 # print(d)
 
 sim_matrix = getSimilarityMatrix(d)
-sim_matrix=euclidean_distances(d,d)
 print("Similarity Matrix: ")
 print(sim_matrix)
 
