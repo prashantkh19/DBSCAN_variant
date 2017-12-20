@@ -1,6 +1,6 @@
 import numpy as np
 import math
-
+from sklearn.metrics.pairwise import euclidean_distances
 
 # function to read input data file
 def read(filename):
@@ -43,14 +43,30 @@ def get_Sparsified_Matrix(matrix,k):
             distances.append(matrix.item(i, j))
             dummy.append(matrix.item(i, j))
         distances.sort()
+        print(distances)
         neighbors = []
         for x in range(1, k + 1):
-            neighbors.append(dummy.index(distances[x]) + 1)
+            val = dummy.index(distances[x]) + 1
+            val = check(val, neighbors, dummy, distances[x], 0)
+            neighbors.append(val)
         neighbors.sort()
         sparsified_matrix.append(neighbors)
         distances = []
         dummy = []
     return sparsified_matrix
+
+
+def check(val, neighbors, dummy, distance, i):
+    if val in neighbors:
+        i = i+1
+        dummy2 = list(dummy)
+        dummy2.pop(val-i)
+        val = dummy2.index(distance) + 1 + i
+        val = check(val, neighbors, dummy2, distance, i)
+        return val
+    else:
+        return val
+
 
 # function to obtain clusters
 def get_clusters(d, sparsified_matrix):
@@ -152,7 +168,7 @@ def update_clusters(clusters, sparsified_matrix, border_pts):
 ##########################################################################################################
 
 #Input data
-d = read('input.data')
+d = read('Test_Cases/t2.in')
 values = d[0]
 del d[0]
 
@@ -165,6 +181,7 @@ MinPts=int(values[4])
 # print(d)
 
 sim_matrix = getSimilarityMatrix(d)
+sim_matrix=euclidean_distances(d,d)
 print("Similarity Matrix: ")
 print(sim_matrix)
 
